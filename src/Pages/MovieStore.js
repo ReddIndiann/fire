@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {useEffect, useState } from 'react';
 import { getDocs ,collection, addDoc,deleteDoc,doc,updateDoc  } from 'firebase/firestore';
 import {db, auth } from '../config/firebase';
-
-import { BrowserRouter as Router, Route, Routes, Switch, Link, BrowserRouter } from 'react-router-dom';
-
+import "./movies.css"
 
 export default function MovieStore(){
     const [moviesList,setMoviesList] = useState([ ]);
@@ -74,24 +72,30 @@ export default function MovieStore(){
             };
 
     return(
-      <div>
-       <div>
+        <div className="movies-container">
+      <div className="movies-container">
         <p>Movies Page </p> 
-      <input placeholder='Movie title...' onChange={(e)=> setNewMovieTitle(e.target.value)}/>
-      <input placeholder='Release Date..' type='number' onChange={(e)=> setNewReleaseDate(Number(e.target.value))}/>
-      <input type='checkbox' checked={isNewMovieOscar} onChange={(e)=> setisNewMovieOscare(e.target.checked)}/>
+      <input  className="input" placeholder='Movie title...'
+      onChange={(e)=> setNewMovieTitle(e.target.value)}/>
+
+      <input  className="input" placeholder='Release Date..'
+       type='number'
+        onChange={(e)=> setNewReleaseDate(Number(e.target.value))}/>
+
+      <input type='checkbox'  className="checkbox"
+       checked={isNewMovieOscar} onChange={(e)=> setisNewMovieOscare(e.target.checked)}/>
       <label>Recieved An Oscar</label>
       
-       <button onClick={logout}>logout</button>
-      <button onClick={onSubmitMoive}> SUBMIT MOVIE</button>
+       <button className="button" onClick={logout}>logout</button>
+      <button className="button" onClick={onSubmitMoive}> SUBMIT MOVIE</button>
     </div>
-    <div>{moviesList.map((movies)=>(
-      <div>
+    <div  className="movie-list" >{moviesList.map((movies)=>(
+     <div className="movie-card" key={movies.id}>
         <h1 style={{color: movies.receivedAnOscar ? "green" : "red"}}>{movies.title}</h1>
          <p>Date:{movies.releaseDate}</p>
-         <button onClick={()=> deleteMovie(movies.id)}>Delete Movie</button>
-         <input onChange={(e)=>setupdateTitle(e.target.value)}/>
-         <button onClick={()=>updateMovieTitle(movies.id)}>update title</button>
+         <button className="button delete-button"  onClick={()=> deleteMovie(movies.id)}>Delete Movie</button>
+         <input className="input update-input" onChange={(e)=>setupdateTitle(e.target.value)}/>
+         <button className="button update-button"onClick={()=>updateMovieTitle(movies.id)}>update title</button>
       </div>
     ))}</div>
       </div>

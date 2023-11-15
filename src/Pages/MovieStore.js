@@ -6,6 +6,7 @@ import { getDocs ,collection, addDoc,deleteDoc,doc,updateDoc  } from 'firebase/f
 import {db, auth } from '../config/firebase';
 import "./movies.css"
 
+
 export default function MovieStore(){
     const [moviesList,setMoviesList] = useState([ ]);
     const navigate =useNavigate();
@@ -51,11 +52,11 @@ export default function MovieStore(){
      const onSubmitMoive = async()=>{
       try{
     await addDoc(moviesCollectionRef, {
-      title:                                    newMovieTitle, 
+      title:  newMovieTitle, 
        releaseDate: newReleaseDate,
        receivedAnOscar: isNewMovieOscar,
        userId:auth?.currentUser?.uid});  
-       getMovieList();
+       navigate("/movielist")
       }catch(err){
         console.error(err)
       }

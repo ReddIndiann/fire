@@ -3,6 +3,8 @@ import { signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/a
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./auth.css";
+import { Link } from "react-router-dom";
+
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ export const Login = () => {
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      navigate("/movie"); 
     } catch (err) {
       console.error(err);
       setError(err.message); // Set the error message in state
@@ -68,9 +71,10 @@ export const Login = () => {
       <button className="button" onClick={signInWithGoogle}>
         Sign in with Google
       </button>
-      <button className="button" onClick={logout}>
-        Logout
-      </button>
+   
+<Link to="/register">   <button className="button">
+Register
+    </button></Link>
       {error && <p className="error-message">{error}</p>}
     </div>
   );

@@ -8,7 +8,7 @@ import SignIn from './Pages/signInPage';
 import SignUp from './Pages/SignUp';
 import MovieStore from './Pages/MovieStore';
 import { BrowserRouter as Router, Route, Routes, Switch, Link, BrowserRouter } from 'react-router-dom';
-
+import MovieDisplay from './Pages/movieDisplay';
 
 
 
@@ -27,6 +27,8 @@ function App() {
   <Route path="/" element= {<SignUp/>}/>
   <Route path="/register" element= {<SignIn/>}/>
   <Route path="/movie" element={<MovieStore/>}/>
+  <Route path="/movielist" element={<MovieDisplay/>}/>
+  
 </Routes>
 </Router>
     </div>

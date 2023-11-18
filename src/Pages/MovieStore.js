@@ -90,15 +90,7 @@ export default function MovieStore(){
        <button className="button" onClick={logout}>logout</button>
       <button className="button" onClick={onSubmitMoive}> SUBMIT MOVIE</button>
     </div>
-    <div  className="movie-list" >{moviesList.map((movies)=>(
-     <div className="movie-card" key={movies.id}>
-        <h1 style={{color: movies.receivedAnOscar ? "green" : "red"}}>{movies.title}</h1>
-         <p>Date:{movies.releaseDate}</p>
-         <button className="button delete-button"  onClick={()=> deleteMovie(movies.id)}>Delete Movie</button>
-         <input className="input update-input" onChange={(e)=>setupdateTitle(e.target.value)}/>
-         <button className="button update-button"onClick={()=>updateMovieTitle(movies.id)}>update title</button>
-      </div>
-    ))}</div>
+   
       </div>
     )
     ;

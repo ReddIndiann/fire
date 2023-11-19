@@ -2,7 +2,7 @@
 import { signOut } from 'firebase/auth';
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState } from 'react';
-import { getDocs ,collection, addDoc,deleteDoc,doc,updateDoc  } from 'firebase/firestore';
+import { getDocs ,collection,deleteDoc,doc,updateDoc  } from 'firebase/firestore';
 import {db, auth } from '../config/firebase';
 import "./movies.css"
 export default function MovieDisplay(){

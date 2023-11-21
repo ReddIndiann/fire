@@ -25,6 +25,7 @@ export const Login = () => {
     } catch (err) {
       console.error(err);
       setError(err.message); // Set the error message in state
+        
     }
   };
 

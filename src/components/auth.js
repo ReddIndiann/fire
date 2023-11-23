@@ -63,7 +63,7 @@ catch(err){
     Sign in with Google
   </button>
   <button className="button" onClick={logout}>
-    Logout
+    Logoutt
   </button>
 </div>
 

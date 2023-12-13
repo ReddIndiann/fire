@@ -2,7 +2,7 @@
 import { signOut } from 'firebase/auth';
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState } from 'react';
-import { getDocs ,collection,deleteDoc,doc,updateDoc  } from 'firebase/firestore';
+import { getDocs ,collection,deleteDoc,query, where,doc,updateDoc  } from 'firebase/firestore';
 import {db, auth } from '../config/firebase';
 import "./movies.css"
 export default function MovieDisplay(){
@@ -19,7 +19,8 @@ export default function MovieDisplay(){
       const getMovieList =async ()=>{ 
         try{
         
-              const data = await getDocs(moviesCollectionRef)
+          const q = query(moviesCollectionRef, where("userId", "==", auth?.currentUser?.uid));
+          const data = await getDocs(q);
               const filteredData = data.docs.map((doc)=>({
                 ...doc.data(),
                 id: doc.id
@@ -65,7 +66,6 @@ export default function MovieDisplay(){
         <h1 style={{color: movies.receivedAnOscar ? "green" : "red"}}>{movies.title}</h1>
          <p>Date:{movies.releaseDate}</p>
          <p>id:{movies.userId}</p>
-        
          <button className="button delete-button"  onClick={()=> deleteMovie(movies.id)}>Delete Movie</button>
          <input className="input update-input" onChange={(e)=>setupdateTitle(e.target.value)}/>
          <button className="button update-button"onClick={()=>updateMovieTitle(movies.id)}>update title</button>

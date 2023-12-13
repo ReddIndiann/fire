@@ -1,50 +1,78 @@
-import { auth, googleProvider } from "../config/firebase";
+import { auth, googleProvider,db } from "../config/firebase";
 import { signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./auth.css";
 import { Link } from "react-router-dom";
-
-
+import { doc,getDoc } from "firebase/firestore";
 export const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleInputFocus = () => {
-    // Clear the error and reset input styles when the input fields receive focus.
     setError(null);
   };
 
   const signIn = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to the home screen after a successful login
-      navigate("/movie"); // Replace "/home" with the actual route for your home screen.
+      setLoading(true);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // Assuming you have a collection named 'users' in Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        if (userData.role === 'admin') {
+          navigate('/options');
+        } else {
+          navigate('/buybread');
+        }
+      }
     } catch (err) {
       console.error(err);
-      setError(err.message); // Set the error message in state
-        
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-      navigate("/movie"); 
+      setLoading(true);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+      // Assuming you have a collection named 'users' in Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        if (userData.role === 'admin') {
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/user-dashboard');
+        }
+      }
     } catch (err) {
       console.error(err);
-      setError(err.message); // Set the error message in state
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = async () => {
     try {
       await signOut(auth);
+      navigate('/');
     } catch (err) {
       console.error(err);
-      setError(err.message); // Set the error message in state
+      setError(err.message);
     }
   };
 
@@ -53,8 +81,6 @@ export const Login = () => {
       <p className="register-title">LOG IN</p>
       <input
         className={`input ${error ? "error-input" : ""}`}
-        required
-
         placeholder="Email....."
         onChange={(e) => setEmail(e.target.value)}
         onFocus={handleInputFocus}
@@ -66,16 +92,15 @@ export const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         onFocus={handleInputFocus}
       />
-      <button className="button" onClick={signIn}>
-        Sign In
+      <button className="button" onClick={signIn} disabled={loading}>
+        {loading ? "Signing In..." : "Sign In"}
       </button>
-      <button className="button" onClick={signInWithGoogle}>
-        Sign in with Google
+      <button className="button" onClick={signInWithGoogle} disabled={loading}>
+        {loading ? "Signing In..." : "Sign in with Google"}
       </button>
-   
-<Link to="/register">   <button className="button">
-Register
-    </button></Link>
+      <Link to="/register">
+        <button className="button">Register</button>
+      </Link>
       {error && <p className="error-message">{error}</p>}
     </div>
   );

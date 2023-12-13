@@ -61,6 +61,10 @@ export default function MovieStore(){
         console.error(err)
       }
      }
+    const serve=()=>{
+
+      navigate("/options")
+    }
      
      const logout = async ()=>{
       
@@ -75,7 +79,7 @@ export default function MovieStore(){
     return(
         <div className="movies-container">
       <div className="movies-container">
-        <p>Movies Page </p> 
+        <p>Movies Page Email:{auth.currentUser?.email} </p> 
       <input  className="input" placeholder='Movie title...'
       onChange={(e)=> setNewMovieTitle(e.target.value)}/>
 
@@ -88,6 +92,7 @@ export default function MovieStore(){
       <label>Recieved An Oscar</label>
       
        <button className="button" onClick={logout}>logout</button>
+       <button className="button" onClick={serve}>Goods and services</button>
       <button className="button" onClick={onSubmitMoive}> SUBMIT MOVIE</button>
     </div>
    

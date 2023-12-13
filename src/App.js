@@ -6,10 +6,11 @@ import {useEffect, useState } from 'react';
 import { getDocs ,collection, addDoc,deleteDoc,doc,updateDoc  } from 'firebase/firestore';
 import SignIn from './Pages/signInPage';
 import SignUp from './Pages/SignUp';
+import BuyBread from './Pages/BuyBread';
 import MovieStore from './Pages/MovieStore';
 import { BrowserRouter as Router, Route, Routes, Switch, Link, BrowserRouter } from 'react-router-dom';
 import MovieDisplay from './Pages/movieDisplay';
-
+import OptionsPage from './Pages/OptionsPage';
 
 
 function App() {
@@ -28,7 +29,8 @@ function App() {
   <Route path="/register" element= {<SignIn/>}/>
   <Route path="/movie" element={<MovieStore/>}/>
   <Route path="/movielist" element={<MovieDisplay/>}/>
-  
+   <Route path="/buybread" element={<BuyBread/>}/>
+   <Route path="/options" element={<OptionsPage/>}/>
 </Routes>
 </Router>
     </div>

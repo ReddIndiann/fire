@@ -11,7 +11,8 @@ import MovieStore from './Pages/MovieStore';
 import { BrowserRouter as Router, Route, Routes, Switch, Link, BrowserRouter } from 'react-router-dom';
 import MovieDisplay from './Pages/movieDisplay';
 import OptionsPage from './Pages/OptionsPage';
-
+import ManageUsers from './Admin/ManageUsers';
+import PurchaseProduct from './Pages/Products';
 
 function App() {
   
@@ -31,6 +32,8 @@ function App() {
   <Route path="/movielist" element={<MovieDisplay/>}/>
    <Route path="/buybread" element={<BuyBread/>}/>
    <Route path="/options" element={<OptionsPage/>}/>
+   <Route path="/users" element={<ManageUsers/>}/>
+   <Route path="/products" element={<PurchaseProduct/>}/>
 </Routes>
 </Router>
     </div>

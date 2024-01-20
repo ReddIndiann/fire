@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../config/firebase';
+import { db,auth } from '../config/firebase';
 import { collection, query, where, getDocs, runTransaction, addDoc } from 'firebase/firestore';
 
 const PurchaseProduct = () => {
@@ -26,8 +26,8 @@ const PurchaseProduct = () => {
 
   const handlePurchase = async () => {
     const q = query(
-      collection(db, 'Bakery'),
-      where('BreadType', '==', BreadType),
+      collection(db, 'Product'),
+      where('Type', '==', BreadType),
       where('Size', '==', Size)
     );
 
@@ -60,7 +60,8 @@ const PurchaseProduct = () => {
             BreadType,
             Size,
             purchaseQuantity,
-            timestamp: new Date()
+            timestamp: new Date(),
+            userId:auth?.currentUser?.uid
           }
         });
       });

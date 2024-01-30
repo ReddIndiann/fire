@@ -28,10 +28,10 @@ export const Auth = ()=>{
         const user = userCredential.user;
   
         // Add user details to Firestore
-        await setDoc(doc(db, 'users', user.uid), {
-          email: user.email,
-         role:"user"
-        });
+        // await setDoc(doc(db, 'users', user.uid), {
+        //   email: user.email,
+        //  role:"user"
+        // });
   
         navigate('/'); // Redirect to home or wherever you want after signup
       } catch (err) {

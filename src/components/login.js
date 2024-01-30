@@ -22,17 +22,18 @@ export const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       // Assuming you have a collection named 'users' in Firestore
-      const userDocRef = doc(db, 'users', user.uid);
-      const userDoc = await getDoc(userDocRef);
+      // const userDocRef = doc(db, 'users', user.uid);
+      // const userDoc = await getDoc(userDocRef);
       
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        if (userData.role === 'admin') {
-          navigate('/options');
-        } else {
-          navigate('/buybread');
-        }
-      }
+      // if (userDoc.exists()) {
+      //   const userData = userDoc.data();
+      //   if (userData.role === 'admin') {
+      //     navigate('/options');
+      //   } else {
+      //     navigate('/buybread');
+      //   }
+      // }
+      navigate('/options');
     } catch (err) {
       console.error(err);
       setError(err.message);

@@ -180,7 +180,7 @@ const PurchaseProduct = () => {
       console.error('Purchase or payment failed:', error.message);
 
       if (stockUpdated && productRef) {
-        // Restore stock if payment failed
+        // Restore stock if payment failedd
         await runTransaction(db, async (transaction) => {
           const doc = await transaction.get(productRef);
           if (doc.exists()) {

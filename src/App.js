@@ -13,6 +13,7 @@ import MovieDisplay from './Pages/movieDisplay';
 import OptionsPage from './Pages/OptionsPage';
 import ManageUsers from './Admin/ManageUsers';
 import PurchaseProduct from './Pages/Products';
+import SplashScreen from './Pages/SplashScreen';
 
 function App() {
   
@@ -26,7 +27,7 @@ function App() {
 
 
 <Routes>
-  <Route path="/" element= {<SignUp/>}/>
+  <Route path="/" element= {<SplashScreen/>}/>
   <Route path="/register" element= {<SignIn/>}/>
   <Route path="/movie" element={<MovieStore/>}/>
   <Route path="/movielist" element={<MovieDisplay/>}/>

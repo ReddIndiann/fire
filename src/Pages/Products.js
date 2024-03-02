@@ -120,7 +120,7 @@ const PurchaseProduct = () => {
         const isSuccess = Math.random() > 0.5; // 50% chance of success or failure
         console.log(`Payment process outcome: ${isSuccess ? 'Success' : 'Failure'}`);
         resolve(isSuccess);
-      }, 1000); // Simulates a delay of 1 second
+      }, 9000); // Simulates a delay of 9 second
     });
   };
 

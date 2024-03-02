@@ -7,6 +7,7 @@ import { getDocs ,collection, addDoc,deleteDoc,doc,updateDoc  } from 'firebase/f
 import SignIn from './Pages/signInPage';
 import SignUp from './Pages/SignUp';
 import BuyBread from './Pages/BuyBread';
+import { Login } from './components/login';
 import MovieStore from './Pages/MovieStore';
 import { BrowserRouter as Router, Route, Routes, Switch, Link, BrowserRouter } from 'react-router-dom';
 import MovieDisplay from './Pages/movieDisplay';
@@ -14,6 +15,8 @@ import OptionsPage from './Pages/OptionsPage';
 import ManageUsers from './Admin/ManageUsers';
 import PurchaseProduct from './Pages/Products';
 import SplashScreen from './Pages/SplashScreen';
+import Reddepayment from './ReddePayment';
+
 
 function App() {
   
@@ -28,9 +31,11 @@ function App() {
 
 <Routes>
   <Route path="/" element= {<SplashScreen/>}/>
+  <Route path="/login" element= {<Login/>}/>
   <Route path="/register" element= {<SignIn/>}/>
   <Route path="/movie" element={<MovieStore/>}/>
   <Route path="/movielist" element={<MovieDisplay/>}/>
+  <Route path="/reddepayment" element={<Reddepayment/>}/>
    <Route path="/buybread" element={<BuyBread/>}/>
    <Route path="/options" element={<OptionsPage/>}/>
    <Route path="/users" element={<ManageUsers/>}/>

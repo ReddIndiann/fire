@@ -105,13 +105,44 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../config/firebase';
 import { collection, query, where, getDocs, runTransaction, addDoc } from 'firebase/firestore';
-
+import PaymentForm from '../PaymentForm';
+import axios from 'axios';
 const PurchaseProduct = () => {
   const [BreadType, setBreadType] = useState('');
   const [Size, setSize] = useState('');
   const [purchaseQuantity, setPurchaseQuantity] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState({ status: 'idle', details: null });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+  function SimpleModal({ isOpen, onClose, children }) {
+    if (!isOpen) return null;
+  
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '5px',
+          minWidth: '300px',
+        }}>
+          <button onClick={onClose} style={{ float: 'right', fontSize: '1.25rem' }}>&times;</button>
+          {children}
+        </div>
+      </div>
+    );
+  }
+  
   const processPayment = () => {
     // Simulate processing time
     return new Promise((resolve) => {
@@ -122,48 +153,64 @@ const PurchaseProduct = () => {
         resolve(isSuccess);
       }, 9000); // Simulates a delay of 9 second
     });
+  };const handlePaymentSubmit = async (formData) => {
+    console.log("Payment Data:", formData);
+    
+    const paymentData = {
+      amount: formData.amount,
+      paymentoption: formData.paymentOption,
+      walletnumber: formData.walletNumber,
+      description: 'Purchase of ' + BreadType + ' (' + Size + ')'
+    };
+  
+    try {
+      const response = await axios.post('http://localhost:3001/receiveMoney', paymentData);
+      console.log('Payment Response:', response.data);
+      
+      if (response.data.status === 'OK') {
+        console.log('Payment successful:', response.data.reason);
+        setIsModalOpen(false); // Close the modal on success
+        await handlePurchase(); // Deduct stock and finalize the transaction after successful payment
+      } else {
+        console.error('Payment failed:', response.data.reason);
+        alert('Payment failed: ' + (response.data.reason || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Payment submission error:', error);
+      alert('Payment processing error. Please try again.');
+    }
   };
+  
+  
 
   const handlePurchase = async () => {
-    let stockUpdated = false;
-    let productRef = null;
-
     try {
       const q = query(
         collection(db, 'Product'),
         where('Type', '==', BreadType),
         where('Size', '==', Size)
       );
-
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
         throw new Error('No matching product found!');
       }
-
       const productDoc = querySnapshot.docs[0];
-      productRef = productDoc.ref;
-
+      const productRef = productDoc.ref;
+  
       await runTransaction(db, async (transaction) => {
         const freshDoc = await transaction.get(productRef);
         if (!freshDoc.exists()) {
           throw new Error('Product does not exist!');
         }
-
+  
         const newQuantity = freshDoc.data().quantity - purchaseQuantity;
         if (newQuantity < 0) {
           throw new Error('Insufficient stock!');
         }
-
+  
         transaction.update(productRef, { quantity: newQuantity });
-        stockUpdated = true;
       });
-
-      const paymentSuccessful = await processPayment();
-      if (!paymentSuccessful) {
-        throw new Error('Payment failed');
-      }
-
-      // Payment successful, update transaction status
+  
       setTransactionStatus({
         status: 'completed',
         details: {
@@ -171,28 +218,18 @@ const PurchaseProduct = () => {
           Size,
           purchaseQuantity,
           timestamp: new Date(),
-          userId: auth?.currentUser?.uid
+          userId: auth?.currentUser?.uid,
+          // Add other relevant details here
         }
       });
-
-      console.log('Purchase successful');
+  
+      console.log('Purchase and stock update successful');
     } catch (error) {
-      console.error('Purchase or payment failed:', error.message);
-
-      if (stockUpdated && productRef) {
-        // Restore stock if payment failedd
-        await runTransaction(db, async (transaction) => {
-          const doc = await transaction.get(productRef);
-          if (doc.exists()) {
-            const restoredQuantity = doc.data().quantity + purchaseQuantity;
-            transaction.update(productRef, { quantity: restoredQuantity });
-          }
-        });
-      }
-
+      console.error('Stock deduction failed:', error.message);
       setTransactionStatus({ status: 'failed', details: null });
     }
   };
+  
 
   useEffect(() => {
     if (transactionStatus.status === 'completed' && transactionStatus.details) {
@@ -228,7 +265,11 @@ const PurchaseProduct = () => {
         onChange={(e) => setPurchaseQuantity(Number(e.target.value))}
         placeholder="Quantity"
       />
-      <button onClick={handlePurchase}>Purchase</button>
+      <button onClick={() => setIsModalOpen(true)}>Purchase</button>
+
+      <SimpleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <PaymentForm onSubmit={handlePaymentSubmit} />
+      </SimpleModal>
     </div>
   );
 };

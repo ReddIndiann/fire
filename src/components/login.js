@@ -48,17 +48,18 @@ export const Login = () => {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
       // Assuming you have a collection named 'users' in Firestore
-      const userDocRef = doc(db, 'users', user.uid);
+      const userDocRef = doc(db, 'userrs', user.uid);
       const userDoc = await getDoc(userDocRef);
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        if (userData.role === 'admin') {
-          navigate('/admin-dashboard');
-        } else {
-          navigate('/user-dashboard');
-        }
-      }
+      // if (userDoc.exists()) {
+      //   const userData = userDoc.data();
+      //   if (userData.role === 'admin') {
+      //     navigate('/admin-dashboard');
+      //   } else {
+      //     navigate('/user-dashboard');
+      //   }
+      // }
+      navigate('/user-dashboard');
     } catch (err) {
       console.error(err);
       setError(err.message);
